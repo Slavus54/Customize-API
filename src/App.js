@@ -1,23 +1,37 @@
-import logo from './logo.svg';
+import React, {useState, useEffect} from 'react';
+import {Checkbox, TextField, Typography, Select, Card, CardContent, CardActionArea} from '@material-ui/core'
+import {Button} from 'uikit-react'
+import Cookies from 'js-cookie'
+import Navbar from './components/Navbar'
 import './App.css';
 
 function App() {
+  const [user, setUser] = useState(null)
+  const [status, setStatus] = useState(0)
+
+  useEffect(() => {
+    let data = Cookies.get('client')
+
+    if (data !== null && data !== undefined) {
+        setUser(JSON.parse(data))
+    }
+}, [])
+
+  const onLogOut = () => {
+    Cookies.remove('client')
+    window.location.reload()
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Navbar />
+      {user !== null && 
+        <>
+            <Typography>Own ID - {user.shortid}</Typography>
+            <Button onClick={onLogOut}>Logout</Button>
+        </>
+      }
+     
     </div>
   );
 }
